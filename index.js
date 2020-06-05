@@ -7,31 +7,29 @@ app.use(bodyParser.json());
 app.use(cors());
 
 const posts = {};
-// posts EXAMPLE:
-// posts === {
-//   'j123j42': {
-//     id: 'j123j42',
-//     title: 'post title',
-//     comments: [
-//       {id: 'klj3kl', content: 'comment!'}
-//     ]
-//   },
-//   'j123j42': {
-//     id: 'j123j42',
-//     title: 'post title',
-//     comments: [
-//       {id: 'klj3kl', content: 'comment!'}
-//     ]
-//   },
-// }
 
 app.get('/posts', (req, res) => {
 
 });
 
-// the endpoint that will receive events froom the event bus
+// the endpoint that will receive events from the event bus
 app.post('/events', (req, res) => {
+  const { type, data } = req.body;  // pull type and data from event's req.body
 
+  if (type === 'PostCreated') {
+    const { id, title } = data;
+
+    posts[id] = { id, title, comments: [] }   // save post in the posts object/collection
+  }
+
+  if (type === 'CommentCreated') {
+    const { id, content, postId } = data;   // pull comment fields from event data
+
+    const post = posts[postId];
+    post.comments.push({ id, content });
+  }
+
+  res.send({}); // send an empty object as response
 });
 
 app.listen(4002, () => {
