@@ -9,7 +9,7 @@ app.use(cors());
 const posts = {};
 
 app.get('/posts', (req, res) => {
-
+  res.send(posts);
 });
 
 // the endpoint that will receive events from the event bus
