@@ -8,14 +8,7 @@ app.use(cors());
 
 const posts = {};
 
-app.get('/posts', (req, res) => {
-  res.send(posts);
-});
-
-// the endpoint that will receive events from the event bus
-app.post('/events', (req, res) => {
-  const { type, data } = req.body;  // pull type and data from event's req.body
-
+const handleEvent = (type, data) => {
   if (type === 'PostCreated') {
     const { id, title } = data;
 
@@ -40,8 +33,17 @@ app.post('/events', (req, res) => {
     comment.status = status;    // assign the status from the event message/data
     comment.content = content;  // for a generic update message, should update all provided fields
   }
+}
 
-  console.log(posts);
+app.get('/posts', (req, res) => {
+  res.send(posts);
+});
+
+// the endpoint that will receive events from the event bus
+app.post('/events', (req, res) => {
+  const { type, data } = req.body;  // pull type and data from event's req.body
+
+  handleEvent(type, data);
 
   res.send({}); // send an empty object as response
 });
