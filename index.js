@@ -29,6 +29,18 @@ app.post('/events', (req, res) => {
     post.comments.push({ id, content, status });
   }
 
+  if (type === 'CommentUpdated') {
+    const { id, content, postId, status } = data;
+
+    const post = posts[postId];
+    const comment = post.comments.find(comment => {
+      return comment.id === id;   // iterate through the comments array and return the comment with the id from the event data
+    });
+
+    comment.status = status;    // assign the status from the event message/data
+    comment.content = content;  // for a generic update message, should update all provided fields
+  }
+
   console.log(posts);
 
   res.send({}); // send an empty object as response
