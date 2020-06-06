@@ -23,10 +23,10 @@ app.post('/events', (req, res) => {
   }
 
   if (type === 'CommentCreated') {
-    const { id, content, postId } = data;   // pull comment fields from event data
+    const { id, content, postId, status } = data;   // pull comment fields from event data
 
     const post = posts[postId];
-    post.comments.push({ id, content });
+    post.comments.push({ id, content, status });
   }
 
   console.log(posts);
